@@ -16,7 +16,7 @@ if (file_exists(SYSTEMPATH . 'Config/Routes.php'))
  * --------------------------------------------------------------------
  */
 $routes->setDefaultNamespace('App\Controllers');
-$routes->setDefaultController('Home');
+$routes->setDefaultController('\Leads\Products');
 $routes->setDefaultMethod('index');
 $routes->setTranslateURIDashes(false);
 $routes->set404Override();
@@ -30,8 +30,13 @@ $routes->setAutoRoute(true);
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
-$routes->get('/', 'Home::index');
+$routes->get('/', 'Leads\Products::index/0');
+$routes->get('/(:num)', 'Leads\Products::index/$1');
 
+$routes->post("/insert", "Leads\Products::insert");
+$routes->get("/search/(:segment)", "Leads\Products::search/$1");
+$routes->post("/update/(:num)", "Leads\Products::update/$1");
+$routes->post("/delete/(:num)", "Leads\Products::delete/$1");
 /**
  * --------------------------------------------------------------------
  * Additional Routing
@@ -49,3 +54,5 @@ if (file_exists(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php'))
 {
 	require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';
 }
+
+
