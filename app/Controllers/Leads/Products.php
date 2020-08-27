@@ -9,6 +9,17 @@ class Products extends Controller
 {
     use ResponseTrait;
 
+    private function strip_tags_content($text, $tags = '') {
+        preg_match_all('/<(.+?)[\s]*\/?[\s]*>/si', trim($tags), $tags);
+        $tags = array_unique($tags[1]);
+
+        if(is_array($tags) AND count($tags) > 0) {
+            return preg_replace('@<(?!(?:'. implode('|', $tags) .')\b)(\w+)\b.*?>.*?</\1>@si', '', $text);
+        } else {
+            return preg_replace('@<(\w+)\b.*?>.*?</\1>@si', '', $text);
+        }
+    }
+
     public function index($offset = 0) {
         $product = new LeadsProductsModel();
         $data['products'] = $product->where("status", 0)->findAll(20, $offset);
@@ -18,7 +29,7 @@ class Products extends Controller
     public function insert() {
         $product = new LeadsProductsModel();
         $data = [
-            'name' => $_POST['name'],
+            'name' => $this->strip_tags_content($this->request->getVar("name")),
         ];
         $product->insert($data);
         $id = $product->getInsertID();
@@ -28,9 +39,9 @@ class Products extends Controller
     public function update($id) {
         $product = new LeadsProductsModel();
         $data = [
-            'name' => $_POST['name'],
+            'name' => $this->strip_tags_content($this->request->getVar("name")),
         ];
-        $product->update($id, $data);
+        $product->update($this->strip_tags_content($id), $data);
         return $this->respond([ "event" => true, "message" => "Done" ], 200);
     }
 
@@ -39,11 +50,12 @@ class Products extends Controller
         $data = [
             'status' => 1,
         ];
-        $product->update($id, $data);
+        $product->update($this->strip_tags_content($id), $data);
         return $this->respond([ "event" => true, "message" => "Done" ], 200);
     }
 
     public function search($name) {
+        $name = $this->strip_tags_content($name);
         $product = new LeadsProductsModel();
         return $this->respond([ "event" => true, "message" => "Done", "data" => $product->where("name", $name)->findAll() ], 200);
     }
