@@ -37,6 +37,7 @@ $routes->post("/insert", "Leads\Products::insert");
 $routes->get("/search/(:segment)", "Leads\Products::search/$1");
 $routes->post("/update/(:num)", "Leads\Products::update/$1");
 $routes->post("/delete/(:num)", "Leads\Products::delete/$1");
+$routes->get("/offset/(:num)", "Leads\Products::offset/$1");
 /**
  * --------------------------------------------------------------------
  * Additional Routing

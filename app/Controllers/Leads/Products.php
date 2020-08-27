@@ -4,6 +4,7 @@ namespace App\Controllers\Leads;
 use App\Models\LeadsProductsModel;
 use CodeIgniter\Controller;
 use CodeIgniter\API\ResponseTrait;
+date_default_timezone_set('UTC');
 
 class Products extends Controller
 {
@@ -57,7 +58,7 @@ class Products extends Controller
     public function search($name) {
         $name = $this->strip_tags_content($name);
         $product = new LeadsProductsModel();
-        return $this->respond([ "event" => true, "message" => "Done", "data" => $product->where("name", $name)->findAll() ], 200);
+        return $this->respond([ "event" => true, "message" => "Done", "data" => $product->like("name", "%" . $name . "%")->findAll() ], 200);
     }
 
     public function offset($offset) {

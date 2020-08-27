@@ -54,7 +54,7 @@
 </table>
 
 <!-- SCRIPTS -->
-<script src="../../js/functions.js"></script>
+<script src="http://localhost/impeltest/js/functions.js"></script>
 
 <!-- -->
 </body>
